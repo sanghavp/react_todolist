@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
 import "./App.css";
 import Item from "./components/item";
 
@@ -13,13 +13,18 @@ function App() {
     "quét nhà",
   ]);
   const [todoValue, setTodoValue] = useState("");
-  const [action, setAction] = useState("Thêm")
+  const [action, setAction] = useState("Thêm");
+  const [updateKey, setUpdateKey] = useState();
 
   const onAddtodo = () => {
     if (!todoValue) return;
     // console.log("value", !todoValue);
     const cloneArray = [...todoArray];
-    action == "Thêm" ? cloneArray.push(todoValue) : cloneArray(todoValue);
+    if (action == "Thêm") cloneArray.push(todoValue);
+    else {
+      cloneArray[updateKey] = todoValue
+      setAction("Thêm")
+    }
     setTodoArray(cloneArray);
     setTodoValue("");
   };
@@ -41,9 +46,10 @@ function App() {
 
   const onClickEditButton = (value) => {
     console.log(value);
-    setTodoValue(todoArray[value])
-    setAction("Cập nhật")
-  }
+    setTodoValue(todoArray[value]);
+    setUpdateKey(value);
+    setAction("Cập nhật");
+  };
 
   return (
     <div>
