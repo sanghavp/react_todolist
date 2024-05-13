@@ -40,7 +40,7 @@ function Item({ item_name, onDelete, index, onEdit }) {
   return (
     <div className="item">
       <input type="checkbox" name="" className="checkbox" id={index} onChange={onCheck}/>
-      <Label for={index}>{item_name}</Label>
+      <Label htmlFor={index}>{item_name}</Label>
       <div className="action">
         <Button onClick={onClickDeleteButton}>X</Button>
         <Button onClick={onClickSearchButton}>edit</Button>

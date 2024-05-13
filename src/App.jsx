@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 // import viteLogo from "/vite.svg";
 import "./App.css";
 import Item from "./components/item";
+import { useSelector, useDispatch } from "react-redux";
+import { addTodo, deleteTodo, updateTodo } from "./features/slices/todoSlices";
 
 function App() {
-  // const todoArray = ["Nấu cơm", "rửa bát", "quét nhà"]
-  // init todolist
-  const [todoArray, setTodoArray] = useState([
-    "Nấu cơm",
-    "rửa bát",
-    "quét nhà",
-  ]);
+  const todoArray = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
   const [todoValue, setTodoValue] = useState("");
   const [action, setAction] = useState("Thêm");
   const [updateKey, setUpdateKey] = useState();
@@ -19,13 +16,12 @@ function App() {
   const onAddtodo = () => {
     if (!todoValue) return;
     // console.log("value", !todoValue);
-    const cloneArray = [...todoArray];
-    if (action == "Thêm") cloneArray.push(todoValue);
+    if (action == "Thêm") dispatch(addTodo(todoValue));
     else {
-      cloneArray[updateKey] = todoValue
-      setAction("Thêm")
+      dispatch(updateTodo({ index: updateKey, name: todoValue }));
+      setAction("Thêm");
     }
-    setTodoArray(cloneArray);
+
     setTodoValue("");
   };
 
@@ -39,15 +35,13 @@ function App() {
   };
 
   const onDelete = (index) => {
-    let todoArrayClone = [...todoArray];
-    todoArrayClone.splice(index, 1);
-    setTodoArray(todoArrayClone);
+    dispatch(deleteTodo(index));
   };
 
-  const onClickEditButton = (value) => {
-    console.log(value);
-    setTodoValue(todoArray[value]);
-    setUpdateKey(value);
+  const onClickEditButton = (index) => {
+    console.log("index", index);
+    setTodoValue(todoArray[index]?.name);
+    setUpdateKey(index);
     setAction("Cập nhật");
   };
 
@@ -62,11 +56,11 @@ function App() {
       <button onClick={onAddtodo}>{action}</button>
       <button>Tìm kiếm</button>
       {todoArray &&
-        todoArray.map((value, key) => {
+        todoArray.map((todo, key) => {
           return (
             <Item
               key={key}
-              item_name={value}
+              item_name={todo.name}
               onAdd={onAddtodo}
               onDelete={onDelete}
               onEdit={onClickEditButton}
